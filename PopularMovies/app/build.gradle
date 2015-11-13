@@ -24,7 +24,7 @@ android {
         }
     }
     buildTypes.each {
-        it.buildConfigField 'String', 'OPEN_MOVIE_DATABASE_KEY' , '"3df9aaf0bebc163064b993fede0282b3"'
+        it.buildConfigField 'String', 'OPEN_MOVIE_DATABASE_KEY' , 
     }
 }
 
