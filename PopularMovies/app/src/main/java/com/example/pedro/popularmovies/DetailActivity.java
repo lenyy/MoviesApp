@@ -1,19 +1,10 @@
 package com.example.pedro.popularmovies;
 
 import android.content.Intent;
-import android.net.Uri;
-import android.support.v4.app.Fragment;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.LayoutInflater;
+import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
-
-import com.squareup.picasso.Picasso;
 
 public class DetailActivity extends AppCompatActivity {
 
@@ -21,9 +12,18 @@ public class DetailActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
+
         if(savedInstanceState == null) {
+
+            Bundle arguments = new Bundle();
+            arguments.putParcelable(DetailFragment.DETAIL_URI, getIntent().getData());
+
+            DetailFragment df = new DetailFragment();
+            df.setArguments(arguments);
+
             getSupportFragmentManager().beginTransaction()
-                    .add(R.id.activity_frame,new DetailActivityFragment()).commit();
+                    .add(R.id.activity_frame, df )
+                    .commit();
         }
     }
 
@@ -50,38 +50,6 @@ public class DetailActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
-    }
-
-    public static class DetailActivityFragment extends Fragment {
-
-        private final String LOG_TAG = DetailActivity.class.getSimpleName();
-
-        private Movie movie;
-
-        public DetailActivityFragment() {
-        }
-
-        @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                                 Bundle savedInstanceState) {
-            Intent intent = getActivity().getIntent();
-            View rootView = inflater.inflate(R.layout.fragment_detail, container, false);
-            if(intent != null && intent.hasExtra("Movie"))
-                movie = intent.getParcelableExtra("Movie");
-            ((TextView) rootView.findViewById(R.id.movie_title)).setText(movie.getTitle());
-            ((TextView) rootView.findViewById(R.id.synopsis_view)).setText(movie.getOverview());
-            ((TextView) rootView.findViewById(R.id.date_view)).setText(movie.getReleaseDate());
-            ((TextView) rootView.findViewById(R.id.user_rating_view)).setText(Float.toString(movie.getRating()));
-
-            Uri imageUri = Uri.parse(getContext().getString(R.string.image_url)).buildUpon()
-                    .appendPath(getContext().getString(R.string.image_size))
-                    .appendEncodedPath(movie.getImagePath())
-                    .build();
-
-            Picasso.with(getContext()).load(imageUri).into(((ImageView) rootView.findViewById(R.id.poster_image)));
-
-            return rootView;
-        }
     }
 
 
